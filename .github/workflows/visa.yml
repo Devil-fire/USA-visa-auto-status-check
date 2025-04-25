@@ -43,6 +43,7 @@ jobs:
         PASSPORT_NUMBER: ${{ secrets.PASSPORT_NUMBER }}
         SURNAME: ${{ secrets.SURNAME }}
         RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+        SENDER_ADDRESS: ${{ secrets.SENDER_ADDRESS }}
         # 可选：如果邮件接收者也设为 secret
         RECIPIENT_EMAIL: ${{ secrets.RECIPIENT_EMAIL }}
       run: |
