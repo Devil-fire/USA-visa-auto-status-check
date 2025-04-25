@@ -2,7 +2,7 @@
 
 ## 简介
 
-本项目是一个 Python 脚本，旨在自动查询美国非移民签证在 CEAC 网站上的申请状态，并通过 Resend 服务发送邮件通知状态变化。脚本通过 GitHub Actions 定时运行。
+本项目是一个 Python 脚本，旨在自动查询美国非移民签证在 CEAC 网站上的申请状态，并通过 Resend 服务发送邮件通知状态变化。脚本通过 GitHub Actions 定时运行。非北京使馆的case，请手动修改本地代码或fork后代码[chekc_visa.py](check_visa.py)中的`location`变量，默认为`BEJ`（北京）。
 
 **请注意：** 使用自动化工具查询 CEAC 网站可能违反其服务条款。请自行承担使用风险。本项目仅供学习和便利目的。
 
