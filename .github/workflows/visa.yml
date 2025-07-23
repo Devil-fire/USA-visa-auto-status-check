@@ -21,15 +21,14 @@ jobs:
       with:
         python-version: '3.13'
 
-    # 恢复之前的状态文件
     - name: Restore visa state
       uses: actions/cache@v3
       with:
         path: |
           ./visa_state_*.json
-        key: visa-state-cache-v1
+        key: visa-state-cache-v1-${{ hashFiles('visa_state_*.json') }}
         restore-keys: |
-          visa-state-cache-
+          visa-state-cache-v1-
 
     - name: Install dependencies
       run: |
@@ -51,10 +50,11 @@ jobs:
         python -X utf8 check_visa.py
       shell: cmd
 
-    # 保存新的状态文件
     - name: Save visa state
       uses: actions/cache@v3
       with:
         path: |
           ./visa_state_*.json
-        key: visa-state-cache-v1
+        key: visa-state-cache-v1-${{ hashFiles('visa_state_*.json') }}
+        restore-keys: |
+          visa-state-cache-v1-
