@@ -10,7 +10,7 @@ on:
 
 jobs:
   check_visa:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
 
     steps:
     - name: Checkout code
@@ -35,8 +35,10 @@ jobs:
         python -m pip install --upgrade pip
         pip install playwright resend ddddocr
         playwright install chromium
+        sudo apt-get update
+        sudo apt-get install -y xvfb
 
-    - name: Run script with UTF-8 encoding
+    - name: Run script
       env: # 在这里添加环境变量
         VISA_CASE_NUMBER: ${{ secrets.VISA_CASE_NUMBER }}
         PASSPORT_NUMBER: ${{ secrets.PASSPORT_NUMBER }}
@@ -46,9 +48,7 @@ jobs:
         # 可选：如果邮件接收者也设为 secret
         RECIPIENT_EMAIL: ${{ secrets.RECIPIENT_EMAIL }}
       run: |
-        chcp 65001
-        python -X utf8 check_visa.py
-      shell: cmd
+        xvfb-run python check_visa.py
 
     - name: Save visa state
       uses: actions/cache@v3
