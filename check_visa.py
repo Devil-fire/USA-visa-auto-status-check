@@ -49,7 +49,7 @@ def dingding_info(webhook,title, text):
     return
     
 # 修改函数签名以接受 resend_api_key
-def get_visa_status(url, visa_type, location, case_number, passport_number, surname, resend_api_key, sender_address, recipient_email, max_retries=3):
+def get_visa_status(url, visa_type, location, case_number, passport_number, surname, resend_api_key, max_retries=3):
     state_manager = VisaStateManager(case_number)
 
     with sync_playwright() as p:
@@ -182,4 +182,5 @@ if __name__ == "__main__":
 
     # 将读取到的值传递给函数
     get_visa_status(url, visa_type, location, case_number, passport_number, surname, resend_api_key, max_retries)
+
 
