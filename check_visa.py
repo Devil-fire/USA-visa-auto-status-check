@@ -40,6 +40,14 @@ class VisaStateManager:
 # 设置控制台输出编码为 UTF-8
 sys.stdout.reconfigure(encoding='utf-8')
 
+def dingding_info(webhook,title, text):
+    data = {
+        "msgtype": "text", 
+        "content": text
+    }
+    requests.post(webhook, json=data)
+    return
+    
 # 修改函数签名以接受 resend_api_key
 def get_visa_status(url, visa_type, location, case_number, passport_number, surname, resend_api_key, sender_address, recipient_email, max_retries=3):
     state_manager = VisaStateManager(case_number)
@@ -122,16 +130,18 @@ def get_visa_status(url, visa_type, location, case_number, passport_number, surn
                 if state_manager.has_state_changed(current_state):
                     print("状态发生变化，发送邮件通知...")
                     # 使用传入的 API Key
-                    resend.api_key = resend_api_key
-                    sender_name = "Visa_bot"
-                    sender_email = f"{sender_name} <{sender_address}>"
-                    params: resend.Emails.SendParams = {
-                        "from": sender_email,
-                        "to": [recipient_email], # 也可以考虑将收件人邮箱设为环境变量
-                        "subject": f"签证状态更新通知: {case_last_updated}",
-                        "html": f"签证状态: {status}<br>Case Created: {case_created}<br>Case Last Updated: {case_last_updated}<br>详细信息：{message}",
-                    }
-                    resend.Emails.send(params)
+                    # resend.api_key = resend_api_key
+                    # sender_name = "Visa_bot"
+                    # sender_email = f"{sender_name} <{sender_address}>"
+                    # params: resend.Emails.SendParams = {
+                    #     "from": sender_email,
+                    #     "to": [recipient_email], # 也可以考虑将收件人邮箱设为环境变量
+                    #     "subject": f"签证状态更新通知: {case_last_updated}",
+                    #     "html": f"签证状态: {status}<br>Case Created: {case_created}<br>Case Last Updated: {case_last_updated}<br>详细信息：{message}",
+                    # }
+                    # resend.Emails.send(params)
+                    webhook = f'https://oapi.dingtalk.com/robot/send?access_token={resend_api_key}'
+                    dingding_info(webhook=webhook, text=f"签证状态: {status}<br>Case Created: {case_created}<br>Case Last Updated: {case_last_updated}<br>详细信息：{message}")
                     
                     # 保存新状态
                     state_manager.save_current_state(current_state)
@@ -159,13 +169,10 @@ if __name__ == "__main__":
     passport_number = os.environ.get("PASSPORT_NUMBER")
     surname = os.environ.get("SURNAME")
     resend_api_key = os.environ.get("RESEND_API_KEY")
-    sender_address = os.environ.get("SENDER_ADDRESS")
-    # 可选：从环境变量读取收件人邮箱
-    recipient_email = os.environ.get("RECIPIENT_EMAIL") # 提供默认值
 
     # 检查必要的环境变量是否已设置
-    if not all([case_number, passport_number, surname, resend_api_key, sender_address]):
-        print("错误：请设置 VISA_CASE_NUMBER, PASSPORT_NUMBER, SURNAME, RESEND_API_KEY 和 SENDER_ADDRESS 环境变量。")
+    if not all([case_number, passport_number, surname, resend_api_key]):
+        print("错误：请设置 VISA_CASE_NUMBER, PASSPORT_NUMBER, SURNAME, RESEND_API_KEY 环境变量。")
         sys.exit(1)
 
     url = "https://ceac.state.gov/CEACStatTracker/Status.aspx"
@@ -174,4 +181,5 @@ if __name__ == "__main__":
     max_retries = 3
 
     # 将读取到的值传递给函数
-    get_visa_status(url, visa_type, location, case_number, passport_number, surname, resend_api_key, sender_address, recipient_email, max_retries)
+    get_visa_status(url, visa_type, location, case_number, passport_number, surname, resend_api_key, max_retries)
+
