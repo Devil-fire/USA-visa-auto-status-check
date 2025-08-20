@@ -8,6 +8,7 @@ Image.ANTIALIAS = Image.Resampling.LANCZOS
 import json
 import os
 from datetime import datetime
+import requests
 
 class VisaStateManager:
     def __init__(self, case_number):
@@ -182,6 +183,7 @@ if __name__ == "__main__":
 
     # 将读取到的值传递给函数
     get_visa_status(url, visa_type, location, case_number, passport_number, surname, resend_api_key, max_retries)
+
 
 
 
