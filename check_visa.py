@@ -40,7 +40,7 @@ class VisaStateManager:
 # 设置控制台输出编码为 UTF-8
 sys.stdout.reconfigure(encoding='utf-8')
 
-def dingding_info(webhook,title, text):
+def dingding_info(webhook, text):
     data = {
         "msgtype": "text", 
         "content": text
@@ -182,5 +182,6 @@ if __name__ == "__main__":
 
     # 将读取到的值传递给函数
     get_visa_status(url, visa_type, location, case_number, passport_number, surname, resend_api_key, max_retries)
+
 
 
