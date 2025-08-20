@@ -41,10 +41,13 @@ class VisaStateManager:
 # 设置控制台输出编码为 UTF-8
 sys.stdout.reconfigure(encoding='utf-8')
 
-def dingding_info(webhook, text):
+def dingding_info(webhook, title, text):
     data = {
-        "msgtype": "text", 
-        "content": text
+        "msgtype": "markdown",
+        "markdown": {
+            "title": title,
+            "text": text
+        }
     }
     requests.post(webhook, json=data)
     return
@@ -142,8 +145,7 @@ def get_visa_status(url, visa_type, location, case_number, passport_number, surn
                     # }
                     # resend.Emails.send(params)
                     webhook = f'https://oapi.dingtalk.com/robot/send?access_token={resend_api_key}'
-                    print(webhook)
-                    dingding_info(webhook=webhook, text=f"签证状态: {status}<br>Case Created: {case_created}<br>Case Last Updated: {case_last_updated}<br>详细信息：{message}")
+                    dingding_info(webhook, title=f"签证状态{status}", text=f"**签证状态:**{status}\n**Case Created:**{case_created}\n**Case Last Updated:**{case_last_updated}\n**详细信息：**{message}")
                     
                     # 保存新状态
                     state_manager.save_current_state(current_state)
@@ -184,6 +186,7 @@ if __name__ == "__main__":
 
     # 将读取到的值传递给函数
     get_visa_status(url, visa_type, location, case_number, passport_number, surname, resend_api_key, max_retries)
+
 
 
 
